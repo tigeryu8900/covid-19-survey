@@ -83,8 +83,10 @@ function getForm(html, options = {}) {
 }
 
 (async () => {
-  const browser = await puppeteer.launch({headless: false});
+  const browser = await puppeteer.launch({headless: true});
+  console.log('Opening puppeteer...');
   var page = await browser.newPage();
+  console.log('Signing in...');
   await page.goto('https://studenthealthoc.sa.ucsb.edu/home.aspx');
   await page.click('#cmdStudentDualAuthentication');
   await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
@@ -95,6 +97,7 @@ function getForm(html, options = {}) {
   // await page.goto('https://studenthealthoc.sa.ucsb.edu/Mvc/Patients/QuarantineSurvey');
   // await page.click('a[href="/Mvc/Patients/QuarantineSurvey"]');
   await page.close();
+  console.log('Opening survey (Step 1)...');
   page = await browser.newPage();
   await page.goto('https://studenthealthoc.sa.ucsb.edu/Mvc/Patients/QuarantineSurvey');
   // console.log("0");
@@ -102,19 +105,24 @@ function getForm(html, options = {}) {
   // await page.waitForNavigation(/*{ waitUntil: 'networkidle0' }*/);
   // console.log("1");
   await page.close();
+  console.log('Opening survey (Step 2)...');
   page = await browser.newPage();
   await page.goto('https://studenthealthoc.sa.ucsb.edu/CheckIn/Survey/ShowAll/24');
   // await page.click('a[href="/CheckIn/Survey/ShowAll/24"]')
   // await page.waitForNavigation({ waitUntil: 'load' });
   // console.log("2");
   // await new Promise((resolve) => setTimeout(resolve, 5000));
+  console.log('Completing survey...');
   await page.$$eval('input[name$="AnswerID"][value="2"]', elements => elements.forEach(e => e.click()));
   // console.log("3");
   // await page.evaluate(() => { submitSurvey() });
+  console.log('Submitting survey...');
   await page.click('input[onclick="submitSurvey()"]')
   await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
+  console.log('Closing browser...');
   await browser.close();
+  console.log('Done!');
 
   // let cookie = [];
   // let login_dualauthentication = await fetch("https://studenthealthoc.sa.ucsb.edu/login_dualauthentication.aspx", {
