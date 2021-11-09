@@ -87,13 +87,13 @@ function getForm(html, options = {}) {
   console.log('Opening puppeteer...');
   var page = await browser.newPage();
   console.log('Signing in...');
-  await page.goto('https://studenthealthoc.sa.ucsb.edu/home.aspx');
+  await page.goto('https://studenthealthoc.sa.ucsb.edu/login_dualauthentication.aspx');
   await page.click('#cmdStudentDualAuthentication');
   await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
   await page.type('#txtUsername', process.env.UCSBNETID);
   await page.type('#txtPassWord', process.env.PASSWORD);
   await page.click('#cmdStandardProceed');
-  // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+  await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
   // await page.goto('https://studenthealthoc.sa.ucsb.edu/Mvc/Patients/QuarantineSurvey');
   // await page.click('a[href="/Mvc/Patients/QuarantineSurvey"]');
   await page.close();
@@ -117,7 +117,8 @@ function getForm(html, options = {}) {
   // console.log("3");
   // await page.evaluate(() => { submitSurvey() });
   console.log('Submitting survey...');
-  await page.click('input[onclick="submitSurvey()"]')
+  // await page.click('input[onclick="submitSurvey()"]');
+  await page.evaluate(_ => { submitSurvey() });
   await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
   console.log('Closing browser...');
