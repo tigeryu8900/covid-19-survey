@@ -86,14 +86,27 @@ function getForm(html, options = {}) {
   const browser = await puppeteer.launch({headless: true});
   console.log('Opening puppeteer...');
   var page = await browser.newPage();
-  console.log('Signing in...');
+  console.log('Signing in (Step 1)...');
   await page.goto('https://studenthealthoc.sa.ucsb.edu/login_dualauthentication.aspx');
   await page.click('#cmdStudentDualAuthentication');
-  await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+  // await new Promise(resolve => setTimeout(resolve, 500));
+  try {
+    await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+  } catch (e) {
+    console.error(e);
+  }
+  console.log('Signing in (Step 2)...');
+  // console.log(1);
   await page.type('#txtUsername', process.env.UCSBNETID);
   await page.type('#txtPassWord', process.env.PASSWORD);
   await page.click('#cmdStandardProceed');
-  await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+  // await new Promise(resolve => setTimeout(resolve, 500));
+  try {
+    await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+  } catch (e) {
+    console.error(e);
+  }
+  // console.log(2);
   // await page.goto('https://studenthealthoc.sa.ucsb.edu/Mvc/Patients/QuarantineSurvey');
   // await page.click('a[href="/Mvc/Patients/QuarantineSurvey"]');
   await page.close();
